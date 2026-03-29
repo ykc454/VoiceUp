@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -81,4 +82,9 @@ dependencies {
 
     // Displays the scanned image
     implementation("io.coil-kt:coil-compose:2.5.0")
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation("com.google.firebase:firebase-auth-ktx:23.2.1")
 }

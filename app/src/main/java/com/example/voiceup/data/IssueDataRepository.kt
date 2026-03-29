@@ -31,5 +31,4 @@ class IssueDataRepository @Inject constructor(private val dao: IssueDao): IssueR
     override suspend fun deleteIssue(issue: Issue) {
         dao.delete(IssueInfo(id = issue.id,name = issue.name,prn = issue.prn, issue = issue.issue))
     }
-
 }
