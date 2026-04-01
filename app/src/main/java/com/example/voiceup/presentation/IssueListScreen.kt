@@ -63,11 +63,7 @@ fun IssueListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate("form") {
-                        popUpTo("issue_list") {
-                            inclusive = true
-                        }
-                    }
+                    navController.navigate("form")
                 },
                 containerColor = secondarycolor,
                 contentColor = Color.White

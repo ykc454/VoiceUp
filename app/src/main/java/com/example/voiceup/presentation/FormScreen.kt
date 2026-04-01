@@ -31,12 +31,15 @@ import com.example.voiceup.domain.Issue
 import com.example.voiceup.ui.theme.primarycolor
 import com.example.voiceup.ui.theme.secondarycolor
 import com.example.voiceup.ui.theme.tertiarycolor
-
+import androidx.activity.compose.BackHandler
 @Composable
 fun FormScreen(
     navController: NavHostController,
     issueViewModel: IssueViewModel
 ) {
+    BackHandler {
+        navController.popBackStack()
+    }
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -170,6 +173,10 @@ fun BottomAppBar(
                         issue = issueViewModel.issue
                     )
                 )
+                issueViewModel.name = ""
+                issueViewModel.prn = ""
+                issueViewModel.subject = ""
+                issueViewModel.issue = ""
 
                 Toast.makeText(context, "Successfully Submitted!", Toast.LENGTH_SHORT).show()
 

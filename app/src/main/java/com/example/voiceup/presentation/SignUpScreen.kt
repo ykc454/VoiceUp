@@ -121,11 +121,6 @@ fun SignUpScreen(navController: NavHostController) {
                                     Toast.makeText(context, task.exception?.message ?: "Sign Up Failed", Toast.LENGTH_SHORT).show()
                                 }
                             }
-                        navController.navigate("login"){
-                            popUpTo("signup"){
-                                inclusive = true
-                            }
-                        }
                     },modifier = Modifier.width(120.dp),
                         colors = ButtonDefaults.buttonColors(primarycolor)
                     ) {

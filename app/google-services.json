@@ -1,6 +1,8 @@
+
 {
   "project_info": {
     "project_number": "635634889407",
+    "firebase_url": "https://voice-up-cc84d-default-rtdb.firebaseio.com",
     "project_id": "voice-up-cc84d",
     "storage_bucket": "voice-up-cc84d.firebasestorage.app"
   },
@@ -12,7 +14,12 @@
           "package_name": "com.example.voiceup"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "635634889407-77l9tb1b7g841rutvm68b4nn79oktqfi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCU5RJtgsPot9QGOzvJ_nX36pR8U7g7Zw8"
@@ -20,7 +27,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "635634889407-77l9tb1b7g841rutvm68b4nn79oktqfi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
