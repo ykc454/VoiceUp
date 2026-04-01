@@ -1,0 +1,151 @@
+package com.example.voiceup.presentation
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.voiceup.ui.theme.primarycolor
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun IssueApp() {
+
+    val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val issueViewModel: IssueViewModel = hiltViewModel()
+
+    val toptext = when (currentRoute) {
+        "login" -> "Login"
+        "signup" -> "Sign Up"
+        "form" -> "Fill Form"
+        "issue_list" -> "Issue List"
+        else -> "App"
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                modifier = Modifier.height(100.dp),
+                title = {
+                    Box(
+                        modifier = Modifier
+                            .wrapContentHeight(Alignment.CenterVertically)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(70.dp)
+                                .padding(horizontal = 12.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = toptext,
+                                fontSize = 24.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+
+                            if (currentRoute == "issue_list") {
+                                OutlinedButton(
+                                    onClick = {
+                                        navController.navigate("login") {
+                                            popUpTo("issue_list") {
+                                                inclusive = true
+                                            }
+                                        }
+                                    },
+                                    modifier = Modifier.height(45.dp).padding(end = 25.dp),
+                                    shape = RoundedCornerShape(12.dp), // nicer shape
+                                    colors = ButtonDefaults.outlinedButtonColors(
+                                        contentColor = primarycolor
+                                    )
+                                ) {
+                                    Text("Logout")
+                                }
+                            }
+                        }
+
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+
+                    titleContentColor = Color.Black,
+                    navigationIconContentColor = Color.White
+                )
+            )
+        },
+        bottomBar = {
+            when (currentRoute) {
+
+                "form" -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp)
+                    ) {
+                        BottomAppBar(
+                            navController = navController,
+                            issueViewModel = issueViewModel
+                        )
+                    }
+                }
+
+                else -> {
+                    // No bottom bar for other screens
+                }
+            }
+        }
+
+
+    ) { innerpadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerpadding)
+                .padding(start = 32.dp, end = 32.dp, top = 16.dp, bottom = 16.dp)
+        ) {
+            NavHost(navController, startDestination = "login") {
+                composable("login") {
+                    LoginScreen(navController)
+                }
+                composable("signup") {
+                    SignUpScreen(navController)
+                }
+                composable("form") {
+                    FormScreen(navController, issueViewModel)
+                }
+                composable("issue_list") {
+                    IssueListScreen(navController, issueViewModel)
+
+                }
+            }
+        }
+    }
+
+}
