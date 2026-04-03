@@ -6,10 +6,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,7 +30,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -53,15 +55,18 @@ import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.sp
 import com.example.voiceup.ui.theme.continuegooglecolor
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
+
 //next
 
 
 @Composable
-fun LoginScreen (navController: NavHostController) {
+fun LoginScreen(navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
@@ -142,26 +147,38 @@ fun LoginScreen (navController: NavHostController) {
 
                     val context = LocalContext.current
 
-                    Button(onClick = {
-                        Firebase.auth.signInWithEmailAndPassword(email, password)
-                            .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    Toast.makeText(context, "Login Successful", Toast.LENGTH_SHORT).show()
-                                    navController.navigate("issue_list") {
-                                        popUpTo("login") {
-                                            inclusive = true
+                    Button(
+                        onClick = {
+                            Firebase.auth.signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Toast.makeText(
+                                            context,
+                                            "Login Successful",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        navController.navigate("issue_list") {
+                                            popUpTo("login") {
+                                                inclusive = true
+                                            }
                                         }
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            task.exception?.message ?: "Login Failed",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
                                     }
-                                } else {
-                                    Toast.makeText(context, task.exception?.message ?: "Login Failed", Toast.LENGTH_SHORT).show()
                                 }
-                            }
-                    }, modifier = Modifier.fillMaxWidth().height(50.dp),
+                        }, modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
                         colors = ButtonDefaults.buttonColors(primarycolor)
                     ) {
-                        Text("Login")
+                        Text("Login", fontSize = 18.sp)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
+
                     OutlinedButton(
                         onClick = {
                             coroutineScope.launch {
@@ -188,13 +205,21 @@ fun LoginScreen (navController: NavHostController) {
                                         Firebase.auth.signInWithCredential(firebaseCredential)
                                             .addOnCompleteListener { task ->
                                                 if (task.isSuccessful) {
-                                                    Toast.makeText(context, "Google Login Success", Toast.LENGTH_SHORT).show()
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Google Login Success",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
 
                                                     navController.navigate("issue_list") {
                                                         popUpTo("login") { inclusive = true }
                                                     }
                                                 } else {
-                                                    Toast.makeText(context, "Firebase Auth Failed", Toast.LENGTH_SHORT).show()
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Firebase Auth Failed",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
                                                 }
                                             }
                                     }
@@ -207,7 +232,19 @@ fun LoginScreen (navController: NavHostController) {
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.outlinedButtonColors(contentColor = continuegooglecolor)
                     ) {
-                        Text("Continue with Google")
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Image(
+                                painterResource(R.drawable.google_logo_new),
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(15.dp))
+                            Text("Continue with Google", fontSize = 18.sp)
+                        }
                     }
                     Spacer(modifier = Modifier.height(8.dp))
 

@@ -31,6 +31,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.voiceup.R
 import com.example.voiceup.ui.theme.primarycolor
@@ -121,10 +122,10 @@ fun SignUpScreen(navController: NavHostController) {
                                     Toast.makeText(context, task.exception?.message ?: "Sign Up Failed", Toast.LENGTH_SHORT).show()
                                 }
                             }
-                    },modifier = Modifier.width(120.dp),
+                    },modifier = Modifier.fillMaxWidth().height(50.dp),
                         colors = ButtonDefaults.buttonColors(primarycolor)
                     ) {
-                        Text("Sign Up")
+                        Text("Sign Up", fontSize = 18.sp)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
 

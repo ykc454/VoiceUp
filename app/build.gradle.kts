@@ -94,6 +94,9 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation("com.google.firebase:firebase-auth-ktx:23.2.1")
+
+    //splash screen
+    implementation("androidx.core:core-splashscreen:1.0.1")
         //new
 
 //    implementation (platform("com.google.firebase:firebase-bom:32.7.0"))

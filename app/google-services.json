@@ -1,4 +1,3 @@
-
 {
   "project_info": {
     "project_number": "635634889407",
@@ -16,13 +15,21 @@
       },
       "oauth_client": [
         {
+          "client_id": "635634889407-1jc5e2f11mh3f1vikq4g87dmmtvqot0f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.voiceup",
+            "certificate_hash": "235316ce06f76195e523b10dcddf4859da5cb45b"
+          }
+        },
+        {
           "client_id": "635634889407-77l9tb1b7g841rutvm68b4nn79oktqfi.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCU5RJtgsPot9QGOzvJ_nX36pR8U7g7Zw8"
+          "current_key": "AIzaSyCh-BJS3vjHuYm3Zw0bandlQ6dPF9vptyw"
         }
       ],
       "services": {
