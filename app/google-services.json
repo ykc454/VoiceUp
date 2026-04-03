@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "635634889407-poj1691jsmb9fcppnfingpdbrrd3oqqk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.voiceup",
+            "certificate_hash": "2cfd9c7b1906ccc859e89f7ec04ea27a24823bfb"
+          }
+        },
+        {
           "client_id": "635634889407-77l9tb1b7g841rutvm68b4nn79oktqfi.apps.googleusercontent.com",
           "client_type": 3
         }
