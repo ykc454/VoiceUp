@@ -2,9 +2,10 @@ package com.example.voiceup.domain
 
 
 data class Issue(
-    val id: Int = 0,
-    val prn: String,
-    val name: String,
-    val issue: String,
-    val subject: String
+    var id: String = "",
+    var prn: String = "",
+    var name: String = "",
+    var issue: String = "",
+    var subject: String = "",
+    var userId: String = ""
 )

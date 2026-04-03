@@ -10,16 +10,15 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface IssueDao {
-    @Query("SELECT * FROM info ORDER BY id DESC")
-    fun getAllIssues(): Flow<List<IssueInfo>>
+    @Query("SELECT * FROM info WHERE userId = :userId ORDER BY id DESC")
+    fun getAllIssues(userId: String): Flow<List<IssueInfo>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(info:IssueInfo)
+    suspend fun insert(info: IssueInfo)
 
     @Delete
-    suspend fun delete(info:IssueInfo)
+    suspend fun delete(info: IssueInfo)
 
     @Update
-    suspend fun update(info:IssueInfo)
-
+    suspend fun update(info: IssueInfo)
 }

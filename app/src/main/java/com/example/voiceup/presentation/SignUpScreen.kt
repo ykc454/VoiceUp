@@ -108,21 +108,23 @@ fun SignUpScreen(navController: NavHostController) {
 
                     val context = LocalContext.current
 
-                    Button(onClick = {
-                        Firebase.auth.createUserWithEmailAndPassword(email, password)
-                            .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    Toast.makeText(context, "Sign Up Successful", Toast.LENGTH_SHORT).show()
-                                    navController.navigate("login") {
-                                        popUpTo("signup") {
-                                            inclusive = true
+                    Button(
+                        onClick = {
+                            Firebase.auth.createUserWithEmailAndPassword(email, password)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        Toast.makeText(context, "Sign Up Successful", Toast.LENGTH_SHORT).show()
+                                        navController.navigate("login") {
+                                            popUpTo("signup") { inclusive = true }
                                         }
+                                    } else {
+                                        Toast.makeText(context, task.exception?.message ?: "Sign Up Failed", Toast.LENGTH_SHORT).show()
                                     }
-                                } else {
-                                    Toast.makeText(context, task.exception?.message ?: "Sign Up Failed", Toast.LENGTH_SHORT).show()
                                 }
-                            }
-                    },modifier = Modifier.fillMaxWidth().height(50.dp),
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp),
                         colors = ButtonDefaults.buttonColors(primarycolor)
                     ) {
                         Text("Sign Up", fontSize = 18.sp)

@@ -4,8 +4,10 @@ import com.example.voiceup.domain.Issue
 import com.example.voiceup.domain.IssueRepository
 import javax.inject.Inject
 
-class UpdateUseCase @Inject constructor(private val issueRepository: IssueRepository) {
-    suspend fun execute (issue: Issue) {
+class UpdateUseCase @Inject constructor(
+    private val issueRepository: IssueRepository
+) {
+    suspend fun execute(issue: Issue) {
         issueRepository.updateIssue(issue)
     }
 }
