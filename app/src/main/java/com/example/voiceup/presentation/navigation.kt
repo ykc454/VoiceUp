@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -46,7 +47,7 @@ fun IssueApp() {
         "signup" -> "Sign Up"
         "form" -> "Fill Form"
         "issue_list" -> "Issue List"
-        else -> "App"
+        else -> "Login"
     }
 
     Scaffold(
@@ -109,6 +110,7 @@ fun IssueApp() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 16.dp)
+                            .navigationBarsPadding()
                     ) {
                         BottomAppBar(
                             navController = navController,
