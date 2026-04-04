@@ -31,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.voiceup.ui.theme.primarycolor
+import com.google.firebase.auth.FirebaseAuth
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,6 +77,7 @@ fun IssueApp() {
                             if (currentRoute == "issue_list") {
                                 OutlinedButton(
                                     onClick = {
+                                        FirebaseAuth.getInstance().signOut()
                                         navController.navigate("login") {
                                             popUpTo("issue_list") {
                                                 inclusive = true

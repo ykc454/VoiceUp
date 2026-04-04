@@ -152,14 +152,16 @@ fun LoginScreen(navController: NavHostController) {
                             Firebase.auth.signInWithEmailAndPassword(email, password)
                                 .addOnCompleteListener { task ->
                                     if (task.isSuccessful) {
-                                        Toast.makeText(
-                                            context,
-                                            "Login Successful",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        navController.navigate("issue_list") {
-                                            popUpTo("login") {
-                                                inclusive = true
+                                        val uid = Firebase.auth.currentUser?.uid ?: ""
+                                        if (uid.isNotEmpty()) {
+                                            // Pass UID to parent or ViewModel
+                                            Toast.makeText(
+                                                context,
+                                                "Login Successful",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                            navController.navigate("issue_list") {
+                                                popUpTo("login") { inclusive = true }
                                             }
                                         }
                                     } else {
@@ -170,7 +172,8 @@ fun LoginScreen(navController: NavHostController) {
                                         ).show()
                                     }
                                 }
-                        }, modifier = Modifier
+                        },
+                        modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp),
                         colors = ButtonDefaults.buttonColors(primarycolor)

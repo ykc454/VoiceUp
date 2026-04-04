@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,12 +27,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.voiceup.data.remote.FirebaseRepository
-import com.example.voiceup.data.remote.IssueInfo
 import com.example.voiceup.domain.Issue
 import com.example.voiceup.ui.theme.primarycolor
 import com.example.voiceup.ui.theme.secondarycolor
 import com.example.voiceup.ui.theme.tertiarycolor
 import androidx.activity.compose.BackHandler
+import kotlinx.coroutines.launch
+
 @Composable
 fun FormScreen(
     navController: NavHostController,
@@ -126,12 +128,13 @@ fun BottomAppBar(
     issueViewModel: IssueViewModel
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(70.dp) // gives proper space
-            .padding(horizontal = 12.dp)
-        ,
+            .height(70.dp)
+            .padding(horizontal = 12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -147,53 +150,50 @@ fun BottomAppBar(
                 .height(50.dp),
             colors = ButtonDefaults.outlinedButtonColors(contentColor = primarycolor)
         ) {
-            Text(
-                text = "Back",
-                maxLines = 1
-            )
+            Text(text = "Back", maxLines = 1)
         }
 
         Button(
             onClick = {
-                FirebaseRepository.addIssue(
-                    IssueInfo(
-                        "",
-                        prn = issueViewModel.prn,
-                        name = issueViewModel.name,
-                        subject = issueViewModel.subject,
-                        issue = issueViewModel.issue
-                    )
+
+                if (issueViewModel.name.isBlank() ||
+                    issueViewModel.prn.isBlank() ||
+                    issueViewModel.subject.isBlank() ||
+                    issueViewModel.issue.isBlank()
+                ) {
+                    Toast.makeText(context, "Fill all fields!", Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
+
+                val issueToSubmit = Issue(
+                    name = issueViewModel.name,
+                    prn = issueViewModel.prn,
+                    subject = issueViewModel.subject,
+                    issue = issueViewModel.issue,
+                    userId = ""
                 )
 
-                issueViewModel.addIssue(
-                    Issue(
-                        name = issueViewModel.name,
-                        prn = issueViewModel.prn,
-                        subject = issueViewModel.subject,
-                        issue = issueViewModel.issue
-                    )
-                )
-                issueViewModel.name = ""
-                issueViewModel.prn = ""
-                issueViewModel.subject = ""
-                issueViewModel.issue = ""
+                scope.launch {
+                    issueViewModel.addIssue(issueToSubmit)
 
-                Toast.makeText(context, "Successfully Submitted!", Toast.LENGTH_SHORT).show()
+                    issueViewModel.name = ""
+                    issueViewModel.prn = ""
+                    issueViewModel.subject = ""
+                    issueViewModel.issue = ""
 
-                navController.navigate("issue_list") {
-                    popUpTo("form") { inclusive = true }
+                    Toast.makeText(context, "Successfully Submitted!", Toast.LENGTH_SHORT).show()
+
+                    navController.navigate("issue_list") {
+                        popUpTo("form") { inclusive = true }
+                    }
                 }
             },
             modifier = Modifier
                 .weight(1f)
-                .height(50.dp)
-                ,
+                .height(50.dp),
             colors = ButtonDefaults.buttonColors(primarycolor)
         ) {
-            Text(
-                text = "Submit",
-                maxLines = 1
-            )
+            Text(text = "Submit", maxLines = 1)
         }
     }
 }
