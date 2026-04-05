@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
@@ -21,4 +22,12 @@ interface IssueDao {
 
     @Update
     suspend fun update(info: IssueInfo)
+
+    @Query("DELETE FROM info WHERE userId = :userId")
+    suspend fun deleteByUser(userId: String)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(list: List<IssueInfo>)
+
+
 }

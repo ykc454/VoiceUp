@@ -1,4 +1,4 @@
-package com.example.voiceup.presentation
+package com.example.voiceup.presentation.screens
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -32,19 +31,19 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.voiceup.R
+import com.example.voiceup.presentation.viewmodels.AuthViewModel
 import com.example.voiceup.ui.theme.primarycolor
 import com.example.voiceup.ui.theme.secondarycolor
 import com.example.voiceup.ui.theme.tertiarycolor
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 
 @Composable
 fun SignUpScreen(navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
+    val authViewModel: AuthViewModel = hiltViewModel()
     LazyColumn(
         modifier = Modifier.fillMaxSize()
             ,
@@ -110,17 +109,18 @@ fun SignUpScreen(navController: NavHostController) {
 
                     Button(
                         onClick = {
-                            Firebase.auth.createUserWithEmailAndPassword(email, password)
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        Toast.makeText(context, "Sign Up Successful", Toast.LENGTH_SHORT).show()
-                                        navController.navigate("login") {
-                                            popUpTo("signup") { inclusive = true }
-                                        }
-                                    } else {
-                                        Toast.makeText(context, task.exception?.message ?: "Sign Up Failed", Toast.LENGTH_SHORT).show()
-                                    }
+                            if (email.isBlank() || password.isBlank()) {
+                                Toast.makeText(context, "Fill all fields", Toast.LENGTH_SHORT).show()
+                                return@Button
+                            }
+
+                            authViewModel.signup(email, password) {
+                                Toast.makeText(context, "Sign Up Successful", Toast.LENGTH_SHORT).show()
+
+                                navController.navigate("login") {
+                                    popUpTo("signup") { inclusive = true }
                                 }
+                            }
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -128,6 +128,9 @@ fun SignUpScreen(navController: NavHostController) {
                         colors = ButtonDefaults.buttonColors(primarycolor)
                     ) {
                         Text("Sign Up", fontSize = 18.sp)
+                    }
+                    authViewModel.errorMessage?.let {
+                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                     }
                     Spacer(modifier = Modifier.height(8.dp))
 

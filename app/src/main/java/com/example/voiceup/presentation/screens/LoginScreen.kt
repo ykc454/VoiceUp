@@ -1,6 +1,5 @@
-package com.example.voiceup.presentation
+package com.example.voiceup.presentation.screens
 
-import android.R.attr.onClick
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -11,14 +10,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -54,10 +51,10 @@ import androidx.credentials.CustomCredential
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.voiceup.presentation.viewmodels.AuthViewModel
 import com.example.voiceup.ui.theme.continuegooglecolor
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.launch
@@ -71,7 +68,7 @@ fun LoginScreen(navController: NavHostController) {
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-
+    val authViewModel: AuthViewModel = hiltViewModel()
     val credentialManager = CredentialManager.create(context)
 
     val googleIdOption = GetGoogleIdOption.Builder()
@@ -149,29 +146,13 @@ fun LoginScreen(navController: NavHostController) {
 
                     Button(
                         onClick = {
-                            Firebase.auth.signInWithEmailAndPassword(email, password)
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        val uid = Firebase.auth.currentUser?.uid ?: ""
-                                        if (uid.isNotEmpty()) {
-                                            // Pass UID to parent or ViewModel
-                                            Toast.makeText(
-                                                context,
-                                                "Login Successful",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-                                            navController.navigate("issue_list") {
-                                                popUpTo("login") { inclusive = true }
-                                            }
-                                        }
-                                    } else {
-                                        Toast.makeText(
-                                            context,
-                                            task.exception?.message ?: "Login Failed",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    }
+                            authViewModel.login(email, password) {
+                                Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT).show()
+
+                                navController.navigate("issue_list") {
+                                    popUpTo("login") { inclusive = true }
                                 }
+                            }
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -179,6 +160,9 @@ fun LoginScreen(navController: NavHostController) {
                         colors = ButtonDefaults.buttonColors(primarycolor)
                     ) {
                         Text("Login", fontSize = 18.sp)
+                    }
+                    authViewModel.errorMessage?.let {
+                        Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                     }
                     Spacer(modifier = Modifier.height(8.dp))
 

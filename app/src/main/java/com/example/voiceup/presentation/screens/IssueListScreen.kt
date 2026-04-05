@@ -1,4 +1,4 @@
-package com.example.voiceup.presentation
+package com.example.voiceup.presentation.screens
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -45,6 +45,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.voiceup.domain.Issue
+import com.example.voiceup.presentation.viewmodels.IssueViewModel
 import com.example.voiceup.ui.theme.primarycolor
 import com.example.voiceup.ui.theme.secondarycolor
 import com.example.voiceup.ui.theme.tertiarycolor

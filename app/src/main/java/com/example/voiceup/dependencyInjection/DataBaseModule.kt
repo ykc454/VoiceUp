@@ -2,22 +2,24 @@ package com.example.voiceup.dependencyInjection
 
 import android.content.Context
 import androidx.room.Room
+import com.example.voiceup.data.IssueRepositoryImpl
 import com.example.voiceup.data.local.IssueDao
-import com.example.voiceup.data.local.IssueDataRepository
 import com.example.voiceup.data.local.IssueDatabase
-import com.example.voiceup.data.remote.FirebaseRepository
-import com.example.voiceup.domain.IssueRepository
+import com.example.voiceup.data.local.IssueLocalDataSource
+import com.example.voiceup.data.remote.FirebaseAuthRepository
+import com.example.voiceup.data.remote.IssueRemoteDataSource
+import com.example.voiceup.domain.repo.AuthRepository
+import com.example.voiceup.domain.repo.IssueRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
+
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-    // Room database still provided (optional, can be used later)
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): IssueDatabase {
@@ -35,10 +37,29 @@ object AppModule {
         return database.issueDao()
     }
 
-    // ✅ MAIN REPOSITORY = Firebase
     @Provides
     @Singleton
-    fun provideRepository(): IssueRepository {
-        return FirebaseRepository
+    fun provideAuthRepository(): AuthRepository {
+        return FirebaseAuthRepository()
+    }
+    @Provides
+    @Singleton
+    fun provideLocalDataSource(dao: IssueDao): IssueLocalDataSource {
+        return IssueLocalDataSource(dao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRemoteDataSource(): IssueRemoteDataSource {
+        return IssueRemoteDataSource()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRepository(
+        local: IssueLocalDataSource,
+        remote: IssueRemoteDataSource
+    ): IssueRepository {
+        return IssueRepositoryImpl(local, remote)
     }
 }

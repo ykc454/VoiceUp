@@ -1,4 +1,4 @@
-package com.example.voiceup.presentation
+package com.example.voiceup.presentation.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,8 +30,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.voiceup.presentation.viewmodels.AuthViewModel
+import com.example.voiceup.presentation.viewmodels.IssueViewModel
 import com.example.voiceup.ui.theme.primarycolor
-import com.google.firebase.auth.FirebaseAuth
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,7 +43,7 @@ fun IssueApp() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val issueViewModel: IssueViewModel = hiltViewModel()
-
+    val authViewModel: AuthViewModel = hiltViewModel()
     val toptext = when (currentRoute) {
         "login" -> "Login"
         "signup" -> "Sign Up"
@@ -77,7 +78,7 @@ fun IssueApp() {
                             if (currentRoute == "issue_list") {
                                 OutlinedButton(
                                     onClick = {
-                                        FirebaseAuth.getInstance().signOut()
+                                        authViewModel.logout()
                                         navController.navigate("login") {
                                             popUpTo("issue_list") {
                                                 inclusive = true

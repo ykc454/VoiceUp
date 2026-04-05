@@ -1,5 +1,6 @@
-package com.example.voiceup.domain
+package com.example.voiceup.domain.repo
 
+import com.example.voiceup.domain.Issue
 import kotlinx.coroutines.flow.Flow
 
 interface IssueRepository {

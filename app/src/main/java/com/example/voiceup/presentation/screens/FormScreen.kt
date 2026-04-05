@@ -1,4 +1,4 @@
-package com.example.voiceup.presentation
+package com.example.voiceup.presentation.screens
 
 
 import android.widget.Toast
@@ -26,12 +26,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.voiceup.data.remote.FirebaseRepository
 import com.example.voiceup.domain.Issue
 import com.example.voiceup.ui.theme.primarycolor
 import com.example.voiceup.ui.theme.secondarycolor
 import com.example.voiceup.ui.theme.tertiarycolor
 import androidx.activity.compose.BackHandler
+import com.example.voiceup.presentation.viewmodels.IssueViewModel
 import kotlinx.coroutines.launch
 
 @Composable
