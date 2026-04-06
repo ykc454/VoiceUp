@@ -11,6 +11,7 @@ import com.example.voiceup.domain.usecase.IssuesUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
@@ -45,23 +46,47 @@ class IssueViewModel @Inject constructor(
         emptyList()
     )
 
-    fun addIssue(issue: Issue) {
+    fun addIssue() {
         viewModelScope.launch {
-            val uid = authRepository.currentUserId.first() ?: return@launch
-            issuesUseCases.addUseCase.execute(issue.copy(userId = uid))
+            val uid = currentUserId.first() ?: return@launch
+            val newIssue = Issue(
+                name = name,
+                prn = prn,
+                subject = subject,
+                issue = issue,
+                userId = uid
+            )
+            issuesUseCases.addUseCase.execute(newIssue)
+            clearFields()
+        }
+    }
+    private fun clearFields() {
+        name = ""
+        prn = ""
+        subject = ""
+        issue = ""
+    }
+
+    init {
+        viewModelScope.launch {
+            currentUserId.collectLatest { uid ->
+                if (uid != null) {
+                    issuesUseCases.syncIssuesUseCase.execute(uid)
+                }
+            }
         }
     }
 
     fun updateIssue(issue: Issue) {
         viewModelScope.launch {
-            val uid = authRepository.currentUserId.first()?: return@launch
+            val uid = currentUserId.first()?: return@launch
             issuesUseCases.updateUseCase.execute(issue.copy(userId = uid))
         }
     }
 
     fun deleteIssue(issue: Issue) {
         viewModelScope.launch {
-            val uid = authRepository.currentUserId.first() ?: return@launch
+            val uid = currentUserId.first() ?: return@launch
             issuesUseCases.deleteUseCase.execute(issue.copy(userId = uid))
         }
     }

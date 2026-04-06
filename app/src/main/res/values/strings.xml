@@ -3,4 +3,8 @@
     <string name="default_web_client_id">
     635634889407-1jc5e2f11mh3f1vikq4g87dmmtvqot0f.apps.googleusercontent.com
 </string>
+    <string name="title_login">Login</string>
+    <string name="title_signup">Create Account</string>
+    <string name="title_form">Report an Issue</string>
+    <string name="title_issue_list">Your Issues</string>
 </resources>

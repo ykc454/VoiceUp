@@ -10,8 +10,20 @@ class IssueLocalDataSource @Inject constructor(
         return dao.getAllIssues(userId)
     }
 
-    suspend fun clearAndInsert(userId: String, issues: List<IssueInfo>) {
-        dao.deleteByUser(userId)
-        dao.insertAll(issues)
+    suspend fun updateLocalCache(userId: String, issues: List<IssueInfo>) {
+        //and prevents UI flickering
+        dao.upsertIssues(userId, issues)
+    }
+
+    suspend fun insertSingle(info: IssueInfo) {
+        dao.insert(info)
+    }
+
+    suspend fun updateSingle(info: IssueInfo) {
+        dao.update(info)
+    }
+
+    suspend fun deleteSingle(info: IssueInfo) {
+        dao.delete(info)
     }
 }

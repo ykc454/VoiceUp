@@ -1,5 +1,8 @@
 package com.example.voiceup.presentation.screens
 
+import com.example.voiceup.R
+
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,7 +37,22 @@ import androidx.navigation.compose.rememberNavController
 import com.example.voiceup.presentation.viewmodels.AuthViewModel
 import com.example.voiceup.presentation.viewmodels.IssueViewModel
 import com.example.voiceup.ui.theme.primarycolor
+sealed class Screen(val route: String, @StringRes val titleRes: Int) {
+    object Login : Screen("login", R.string.title_login)
+    object SignUp : Screen("signup", R.string.title_signup)
+    object Form : Screen("form", R.string.title_form)
+    object IssueList : Screen("issue_list", R.string.title_issue_list)
 
+    companion object {
+        // Helper to find a Screen object by its route string
+        fun fromRoute(route: String?): Screen = when (route) {
+            SignUp.route -> SignUp
+            Form.route -> Form
+            IssueList.route -> IssueList
+            else -> Login
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,13 +63,8 @@ fun IssueApp() {
     val currentRoute = navBackStackEntry?.destination?.route
     val issueViewModel: IssueViewModel = hiltViewModel()
     val authViewModel: AuthViewModel = hiltViewModel()
-    val toptext = when (currentRoute) {
-        "login" -> "Login"
-        "signup" -> "Sign Up"
-        "form" -> "Fill Form"
-        "issue_list" -> "Issue List"
-        else -> "Login"
-    }
+    val currentScreen = Screen.fromRoute(currentRoute)
+    val toptext = stringResource(id = currentScreen.titleRes)
 
     Scaffold(
         topBar = {
@@ -135,17 +149,17 @@ fun IssueApp() {
                 .padding(innerpadding)
                 .padding(start = 32.dp, end = 32.dp, top = 16.dp, bottom = 16.dp)
         ) {
-            NavHost(navController, startDestination = "login") {
-                composable("login") {
+            NavHost(navController, startDestination = Screen.Login.route) {
+                composable(Screen.Login.route) {
                     LoginScreen(navController)
                 }
-                composable("signup") {
+                composable(Screen.SignUp.route) {
                     SignUpScreen(navController)
                 }
-                composable("form") {
+                composable(Screen.Form.route) {
                     FormScreen(navController, issueViewModel)
                 }
-                composable("issue_list") {
+                composable(Screen.IssueList.route) {
                     IssueListScreen(navController, issueViewModel)
 
                 }

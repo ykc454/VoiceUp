@@ -111,8 +111,6 @@ fun FormScreen(
                     )
                 )
                 Spacer(modifier = Modifier.height(22.dp))
-
-
             }
         }
 
@@ -141,8 +139,8 @@ fun BottomAppBar(
 
         OutlinedButton(
             onClick = {
-                navController.navigate("issue_list") {
-                    popUpTo("form") { inclusive = true }
+                navController.navigate(Screen.IssueList.route) {
+                    popUpTo(Screen.Form.route) { inclusive = true }
                 }
             },
             modifier = Modifier
@@ -165,28 +163,14 @@ fun BottomAppBar(
                     return@Button
                 }
 
-                val issueToSubmit = Issue(
-                    name = issueViewModel.name,
-                    prn = issueViewModel.prn,
-                    subject = issueViewModel.subject,
-                    issue = issueViewModel.issue,
-                    userId = ""
-                )
-
-                scope.launch {
-                    issueViewModel.addIssue(issueToSubmit)
-
-                    issueViewModel.name = ""
-                    issueViewModel.prn = ""
-                    issueViewModel.subject = ""
-                    issueViewModel.issue = ""
+                    issueViewModel.addIssue()
 
                     Toast.makeText(context, "Successfully Submitted!", Toast.LENGTH_SHORT).show()
 
-                    navController.navigate("issue_list") {
-                        popUpTo("form") { inclusive = true }
+                    navController.navigate(Screen.IssueList.route) {
+                        popUpTo(Screen.Form.route) { inclusive = true }
                     }
-                }
+
             },
             modifier = Modifier
                 .weight(1f)

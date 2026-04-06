@@ -64,7 +64,7 @@ fun IssueListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    navController.navigate("form")
+                    navController.navigate(Screen.Form.route)
                 },
                 containerColor = secondarycolor,
                 contentColor = Color.White

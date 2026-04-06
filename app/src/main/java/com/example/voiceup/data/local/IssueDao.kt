@@ -14,9 +14,8 @@ interface IssueDao {
     @Query("SELECT * FROM info WHERE userId = :userId ORDER BY id DESC")
     fun getAllIssues(userId: String): Flow<List<IssueInfo>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(info: IssueInfo)
-
     @Delete
     suspend fun delete(info: IssueInfo)
 
@@ -29,5 +28,14 @@ interface IssueDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(list: List<IssueInfo>)
 
+    @Query("DELETE FROM info WHERE userId = :userId AND id NOT IN (:remainingIds)")
+    suspend fun deleteRemovedIssues(userId: String, remainingIds: List<String>)
+
+    @Transaction
+    suspend fun upsertIssues(userId: String, issues: List<IssueInfo>) {
+        insertAll(issues)
+        val ids = issues.map { it.id }
+        deleteRemovedIssues(userId, ids)
+    }
 
 }

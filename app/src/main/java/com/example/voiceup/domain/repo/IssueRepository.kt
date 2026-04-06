@@ -8,4 +8,6 @@ interface IssueRepository {
     suspend fun addIssue(issue: Issue)
     suspend fun updateIssue(issue: Issue)
     suspend fun deleteIssue(issue: Issue)
+//new
+suspend fun syncIssues(userId: String)
 }

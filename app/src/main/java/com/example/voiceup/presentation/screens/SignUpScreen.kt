@@ -10,9 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -44,13 +47,12 @@ fun SignUpScreen(navController: NavHostController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val authViewModel: AuthViewModel = hiltViewModel()
-    LazyColumn(
-        modifier = Modifier.fillMaxSize()
-            ,
+    Column(
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        item {
+
             Box(
                 modifier = Modifier.fillMaxWidth()
                     ,
@@ -117,8 +119,8 @@ fun SignUpScreen(navController: NavHostController) {
                             authViewModel.signup(email, password) {
                                 Toast.makeText(context, "Sign Up Successful", Toast.LENGTH_SHORT).show()
 
-                                navController.navigate("login") {
-                                    popUpTo("signup") { inclusive = true }
+                                navController.navigate(Screen.Login.route) {
+                                    popUpTo(Screen.SignUp.route) { inclusive = true }
                                 }
                             }
                         },
@@ -127,7 +129,12 @@ fun SignUpScreen(navController: NavHostController) {
                             .height(50.dp),
                         colors = ButtonDefaults.buttonColors(primarycolor)
                     ) {
-                        Text("Sign Up", fontSize = 18.sp)
+                        if (authViewModel.isLoading) {
+                            CircularProgressIndicator()
+                        } else {
+                            Text("Sign Up", fontSize = 18.sp)
+                        }
+
                     }
                     authViewModel.errorMessage?.let {
                         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
@@ -135,8 +142,8 @@ fun SignUpScreen(navController: NavHostController) {
                     Spacer(modifier = Modifier.height(8.dp))
 
                     TextButton(onClick = {
-                        navController.navigate("login") {
-                            popUpTo("signup") {
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(Screen.SignUp.route) {
                                 inclusive = true
                             }
                         }
@@ -146,6 +153,6 @@ fun SignUpScreen(navController: NavHostController) {
                     }
                 }
             }
-        }
+
     }
 }
