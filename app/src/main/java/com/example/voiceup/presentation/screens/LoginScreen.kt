@@ -9,14 +9,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -34,10 +37,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,25 +55,27 @@ import com.example.voiceup.ui.theme.continuegooglecolor
 import com.example.voiceup.ui.theme.primarycolor
 import com.example.voiceup.ui.theme.secondarycolor
 import com.example.voiceup.ui.theme.tertiarycolor
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 //next
 
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
+    val scope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current
     val authViewModel: AuthViewModel = hiltViewModel()
-
+    val focusManager = LocalFocusManager.current
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+        modifier = Modifier.fillMaxSize().verticalScroll(scrollState).imePadding(),
 
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
-
             Box(
                 modifier = Modifier.fillMaxWidth(),
 
@@ -89,10 +97,18 @@ fun LoginScreen(navController: NavHostController) {
 
                     OutlinedTextField(
                         value = email,
-                        onValueChange = { email = it },
+                        onValueChange = { email = it
+                            scope.launch {
+                                delay(30)
+                                scrollState.animateScrollTo(scrollState.maxValue)
+                            }},
                         label = { Text("Email") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                        keyboardActions = KeyboardActions(
+                            onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                        ),
                         colors = TextFieldDefaults.colors(
                             focusedIndicatorColor = secondarycolor,
                             unfocusedLabelColor = Color.Gray,
@@ -106,11 +122,17 @@ fun LoginScreen(navController: NavHostController) {
 
                     OutlinedTextField(
                         value = password,
-                        onValueChange = { password = it },
+                        onValueChange = { password = it
+                             },
                         label = { Text("Password") },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth(),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+
+                        keyboardActions = KeyboardActions(
+                            onDone = { focusManager.clearFocus() }
+                        ),
                         colors = TextFieldDefaults.colors(
                             focusedIndicatorColor = secondarycolor,
                             focusedLabelColor = primarycolor,
@@ -141,7 +163,12 @@ fun LoginScreen(navController: NavHostController) {
                         colors = ButtonDefaults.buttonColors(primarycolor)
                     ) {
                         if (authViewModel.isLoading) {
-                            CircularProgressIndicator()
+                            Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center){
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(35.dp)
+                                )
+                            }
+
                         } else {
                             Text("Login", fontSize = 18.sp)
                         }

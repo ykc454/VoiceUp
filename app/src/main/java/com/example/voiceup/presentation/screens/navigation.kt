@@ -1,5 +1,6 @@
 package com.example.voiceup.presentation.screens
 
+import android.R.attr.navigationIcon
 import com.example.voiceup.R
 
 import androidx.annotation.StringRes
@@ -13,8 +14,13 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -69,53 +75,50 @@ fun IssueApp() {
     Scaffold(
         topBar = {
             TopAppBar(
-                modifier = Modifier.height(100.dp),
                 title = {
-                    Box(
-                        modifier = Modifier
-                            .wrapContentHeight(Alignment.CenterVertically)
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(70.dp)
-                                .padding(horizontal = 12.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = toptext,
-                                fontSize = 24.sp,
-                                fontWeight = FontWeight.Bold
-                            )
+                    Text(
+                        text = toptext,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                },
 
-                            if (currentRoute == "issue_list") {
-                                OutlinedButton(
-                                    onClick = {
-                                        authViewModel.logout()
-                                        navController.navigate("login") {
-                                            popUpTo("issue_list") {
-                                                inclusive = true
-                                            }
-                                        }
-                                    },
-                                    modifier = Modifier.height(45.dp).padding(end = 25.dp),
-                                    shape = RoundedCornerShape(12.dp), // nicer shape
-                                    colors = ButtonDefaults.outlinedButtonColors(
-                                        contentColor = primarycolor
-                                    )
-                                ) {
-                                    Text("Logout")
-                                }
-                            }
+                // BACK BUTTON (only on Form screen)
+                navigationIcon = {
+                    if (currentRoute == Screen.Form.route) {
+                        IconButton(onClick = { navController.popBackStack()
+                        issueViewModel.clearFields()
+                        }) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                         }
-
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
 
-                    titleContentColor = Color.Black,
-                    navigationIconContentColor = Color.White
+                // ACTIONS for right side
+                actions = {
+                    if (currentRoute == Screen.IssueList.route) {
+                        OutlinedButton(
+                            onClick = {
+                                authViewModel.logout()
+                                navController.navigate(Screen.Login.route) {
+                                    popUpTo(Screen.IssueList.route) { inclusive = true }
+                                }
+                            },
+                            modifier = Modifier
+                                .height(40.dp)
+                                .padding(end = 8.dp),
+                            shape = RoundedCornerShape(10.dp),
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                contentColor = primarycolor
+                            )
+                        ) {
+                            Text("Logout")
+                        }
+                    }
+                },
+
+                colors = TopAppBarDefaults.topAppBarColors(
+                    titleContentColor = Color.Black
                 )
             )
         },

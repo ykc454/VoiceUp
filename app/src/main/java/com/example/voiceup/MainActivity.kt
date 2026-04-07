@@ -14,12 +14,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.example.voiceup.presentation.screens.AnimatedSplashScreen
 import com.example.voiceup.presentation.screens.IssueApp
 import com.example.voiceup.ui.theme.VoiceUpTheme
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -39,7 +41,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             VoiceUpTheme {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    var showSplash by remember { mutableStateOf(true) }
+                    var showSplash by rememberSaveable { mutableStateOf(true) }
 
                     if (showSplash) {
                         AnimatedSplashScreen {
@@ -54,28 +56,3 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun AnimatedSplashScreen(onFinish: () -> Unit) {
-
-    val scale = remember { Animatable(0f) }
-
-    LaunchedEffect(Unit) {
-        scale.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(durationMillis = 1000)
-        )
-        delay(1000)
-        onFinish()
-    }
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.clg_logo),
-            contentDescription = "Logo",
-            modifier = Modifier.scale(scale.value)
-        )
-    }
-}

@@ -26,7 +26,7 @@ fun Issue.toInfo(): IssueInfo {
     )
 }
 
-// Optional: Add this to convert from Database back to UI
+//this to convert from Database back to UI
 fun IssueInfo.toDomain(): Issue {
     return Issue(
         id = this.id,

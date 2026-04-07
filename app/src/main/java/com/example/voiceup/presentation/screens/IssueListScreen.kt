@@ -6,6 +6,7 @@ import androidx.compose.animation.core.spring
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -40,8 +41,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.voiceup.domain.Issue
@@ -79,8 +78,6 @@ fun IssueListScreen(
                 .fillMaxSize()
         ) {
 
-            Spacer(modifier = Modifier.height(16.dp))
-
             HorizontalDivider(
                 color = primarycolor,
                 thickness = DividerDefaults.Thickness,
@@ -116,75 +113,84 @@ fun IssueCard(issue: Issue) {
     var expanded by remember { mutableStateOf(false) }
 
     Card(
-        colors = CardDefaults.cardColors(tertiarycolor),
         modifier = Modifier
             .fillMaxWidth()
+            .padding(vertical = 6.dp, horizontal = 4.dp)
             .clickable { expanded = !expanded },
-        elevation = CardDefaults.cardElevation(4.dp),
-        shape = RoundedCornerShape(23.dp)
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+        colors = CardDefaults.cardColors(containerColor = tertiarycolor)
     ) {
 
-        ConstraintLayout (
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
                 .animateContentSize(
                     animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioNoBouncy,
-                        stiffness = Spring.StiffnessMedium
+                        dampingRatio = Spring.DampingRatioMediumBouncy,
+                        stiffness = Spring.StiffnessLow
                     )
                 )
                 .padding(16.dp)
         ) {
 
-            val (subject, button, detail) = createRefs()
-
-
-            Text(
-                text = issue.subject,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.constrainAs(subject) {
-                    start.linkTo(parent.start)
-                    top.linkTo(parent.top)
-                    end.linkTo(button.start)
-                    width = Dimension.fillToConstraints
-                }
-            )
-
-            IconButton(
-                onClick = { expanded = !expanded },
-                modifier = Modifier.constrainAs(button) {
-                    end.linkTo(parent.end)
-                    top.linkTo(parent.top)
-                }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = if (expanded)
-                        Icons.Filled.KeyboardArrowUp
-                    else
-                        Icons.Filled.KeyboardArrowDown,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.secondary
-                )
-            }
 
-            if (expanded) {
-                Column(
-                    modifier = Modifier.constrainAs(detail) {
-                        start.linkTo(parent.start)
-                        top.linkTo(subject.bottom, margin = 8.dp)
-                        end.linkTo(parent.end)
-                        width = Dimension.fillToConstraints
-                    }
-                ) {
+                Column(modifier = Modifier.weight(1f)) {
+
                     Text(
-                        text = "Your Issue:",
-                        style = MaterialTheme.typography.labelSmall
+                        text = "Subject",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = Color.Gray
                     )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
                     Text(
-                        text = issue.issue,
-                        style = MaterialTheme.typography.bodyLarge
+                        text = issue.subject,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 }
+
+                IconButton(onClick = { expanded = !expanded }) {
+                    Icon(
+                        imageVector = if (expanded)
+                            Icons.Filled.KeyboardArrowUp
+                        else
+                            Icons.Filled.KeyboardArrowDown,
+                        contentDescription = null,
+                        tint = primarycolor
+                    )
+                }
+            }
+            if (expanded) {
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                HorizontalDivider(
+                    thickness = 1.dp,
+                    color = Color.LightGray.copy(alpha = 0.5f)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = "Your Issue",
+                    style = MaterialTheme.typography.labelMedium,
+                    color = primarycolor
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    text = issue.issue,
+                    style = MaterialTheme.typography.bodyLarge,
+                    lineHeight = 20.sp
+                )
             }
         }
     }

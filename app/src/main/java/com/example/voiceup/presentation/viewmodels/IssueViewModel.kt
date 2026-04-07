@@ -60,12 +60,13 @@ class IssueViewModel @Inject constructor(
             clearFields()
         }
     }
-    private fun clearFields() {
+    fun clearFields() {
         name = ""
         prn = ""
         subject = ""
         issue = ""
     }
+
 
     init {
         viewModelScope.launch {
