@@ -1,15 +1,21 @@
 package com.example.voiceup.presentation.screens
 
+//google login
+
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -18,7 +24,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -38,34 +44,41 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.voiceup.R
 import com.example.voiceup.presentation.viewmodels.AuthViewModel
+import com.example.voiceup.ui.theme.continuegooglecolor
 import com.example.voiceup.ui.theme.primarycolor
 import com.example.voiceup.ui.theme.secondarycolor
 import com.example.voiceup.ui.theme.tertiarycolor
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+//next
+
+
 @Composable
-fun SignUpScreen(navController: NavHostController) {
+fun StudentLoginLoginScreen(navController: NavHostController) {
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
     val authViewModel: AuthViewModel = hiltViewModel()
     val focusManager = LocalFocusManager.current
-
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(scrollState).imePadding(),
+
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
             Box(
                 modifier = Modifier.fillMaxWidth(),
+
                 contentAlignment = Alignment.Center
             ) {
                 Column(
@@ -79,17 +92,16 @@ fun SignUpScreen(navController: NavHostController) {
                             .fillMaxWidth(),
                         contentScale = ContentScale.Fit
                     )
-                    Spacer(modifier = Modifier.height(32.dp))
-                    Text("SignUp", style = MaterialTheme.typography.headlineMedium)
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(54.dp))
+
 
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it
-                                        scope.launch {
-                                            delay(30)
-                                            scrollState.animateScrollTo(scrollState.maxValue)
-                                        }},
+                            scope.launch {
+                                delay(30)
+                                scrollState.animateScrollTo(scrollState.maxValue)
+                            }},
                         label = { Text("Email") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
@@ -99,10 +111,10 @@ fun SignUpScreen(navController: NavHostController) {
                         ),
                         colors = TextFieldDefaults.colors(
                             focusedIndicatorColor = secondarycolor,
+                            unfocusedLabelColor = Color.Gray,
                             focusedLabelColor = primarycolor,
                             focusedContainerColor = tertiarycolor,
                             unfocusedContainerColor = tertiarycolor,
-                            unfocusedLabelColor = Color.DarkGray
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
@@ -110,9 +122,11 @@ fun SignUpScreen(navController: NavHostController) {
 
                     OutlinedTextField(
                         value = password,
-                        onValueChange = { password = it },
+                        onValueChange = { password = it
+                             },
                         label = { Text("Password") },
                         singleLine = true,
+                        visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth(),
                         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
 
@@ -124,55 +138,91 @@ fun SignUpScreen(navController: NavHostController) {
                             focusedLabelColor = primarycolor,
                             focusedContainerColor = tertiarycolor,
                             unfocusedContainerColor = tertiarycolor,
-                            unfocusedLabelColor = Color.DarkGray
+                            unfocusedLabelColor = Color.Gray
                         ),
                         shape = RoundedCornerShape(12.dp)
                     )
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    val context = LocalContext.current
 
+                    //Login Button
                     Button(
                         onClick = {
-                            if (email.isBlank() || password.isBlank()) {
-                                Toast.makeText(context, "Fill all fields", Toast.LENGTH_SHORT).show()
-                                return@Button
-                            }
+                                authViewModel.login(email, password) {
 
-                            authViewModel.signup(email, password) {
-                                Toast.makeText(context, "Sign Up Successful", Toast.LENGTH_SHORT).show()
-
-                                navController.navigate(Screen.StudentLogin.route) {
-                                    popUpTo(Screen.SignUp.route) { inclusive = true }
+                                    if (email == "rmw@gmail.com") {
+                                        Toast.makeText(context, "Please Enter Valid Information", Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
+                                    else {
+                                        Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT)
+                                            .show()
+                                        navController.navigate(Screen.IssueList.route) {
+                                            popUpTo(Screen.StudentLogin.route) { inclusive = true }
+                                        }
+                                    }
                                 }
-                            }
                         },
+
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(50.dp),
                         colors = ButtonDefaults.buttonColors(primarycolor)
                     ) {
                         if (authViewModel.isLoading) {
-                            CircularProgressIndicator()
-                        } else {
-                            Text("Sign Up", fontSize = 18.sp)
-                        }
+                            Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center){
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(35.dp)
+                                )
+                            }
 
+                        } else {
+                            Text("Login", fontSize = 18.sp)
+                        }
                     }
                     authViewModel.errorMessage?.let {
                         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
                     }
                     Spacer(modifier = Modifier.height(8.dp))
 
+                    OutlinedButton(
+                        onClick = {
+                            authViewModel.signInWithGoogle(context){
+                                Toast.makeText(context, "Google Login Success", Toast.LENGTH_SHORT).show()
+
+                                navController.navigate(Screen.IssueList.route) {
+                                    popUpTo(Screen.StudentLogin.route) { inclusive = true }
+                                }
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = continuegooglecolor)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Image(
+                                painterResource(R.drawable.google_logo_new),
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(15.dp))
+                            Text("Continue with Google", fontSize = 18.sp)
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+
                     TextButton(onClick = {
-                        navController.navigate(Screen.StudentLogin.route) {
-                            popUpTo(Screen.SignUp.route) {
+                        navController.navigate(Screen.SignUp.route) {
+                            popUpTo(Screen.StudentLogin.route) {
                                 inclusive = true
                             }
                         }
                     }
                     ) {
-                       Text("Already have an account? Login")
+                        Text("Don't have an account? Sign Up")
                     }
                 }
             }

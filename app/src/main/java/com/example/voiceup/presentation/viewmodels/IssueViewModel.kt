@@ -46,6 +46,15 @@ class IssueViewModel @Inject constructor(
         emptyList()
     )
 
+    // Teacher issues (all users issues from firebase)
+    val allIssues = issuesUseCases.getAllIssuesUseCase.execute()
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyList()
+        )
+
+
     fun addIssue() {
         viewModelScope.launch {
             val uid = currentUserId.first() ?: return@launch

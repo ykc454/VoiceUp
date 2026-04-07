@@ -37,6 +37,40 @@ class IssueRemoteDataSource @Inject constructor() {
         }
     }
 
+    // for teacher screen to show all issues.
+    fun getAllIssues(): Flow<List<Issue>> = callbackFlow {
+
+        val ref = db.child("issues")
+
+        val listener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                val allIssues = mutableListOf<Issue>()
+
+                for (userSnapshot in snapshot.children) {
+                    for (issueSnapshot in userSnapshot.children) {
+                        val issue = issueSnapshot.getValue(Issue::class.java)
+                        if (issue != null) {
+                            allIssues.add(issue)
+                        }
+                    }
+                }
+
+                trySend(allIssues)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                close(error.toException())
+            }
+        }
+
+        ref.addValueEventListener(listener)
+
+        awaitClose {
+            ref.removeEventListener(listener)
+        }
+    }
+
      fun addIssue(issue: Issue) {
         val ref = db.child("issues").child(issue.userId)
         val id = ref.push().key ?: return

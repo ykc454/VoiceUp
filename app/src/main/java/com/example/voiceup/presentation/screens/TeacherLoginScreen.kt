@@ -62,7 +62,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun LoginScreen(navController: NavHostController) {
+fun TeacherLoginScreen(navController: NavHostController) {
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     var email by remember { mutableStateOf("") }
@@ -97,11 +97,13 @@ fun LoginScreen(navController: NavHostController) {
 
                     OutlinedTextField(
                         value = email,
-                        onValueChange = { email = it
+                        onValueChange = {
+                            email = it
                             scope.launch {
                                 delay(30)
                                 scrollState.animateScrollTo(scrollState.maxValue)
-                            }},
+                            }
+                        },
                         label = { Text("Email") },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
@@ -122,8 +124,9 @@ fun LoginScreen(navController: NavHostController) {
 
                     OutlinedTextField(
                         value = password,
-                        onValueChange = { password = it
-                             },
+                        onValueChange = {
+                            password = it
+                        },
                         label = { Text("Password") },
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
@@ -145,14 +148,20 @@ fun LoginScreen(navController: NavHostController) {
                     Spacer(modifier = Modifier.height(24.dp))
 
 
-//Login Button
+                    //Login Button
                     Button(
                         onClick = {
                             authViewModel.login(email, password) {
-                                Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT).show()
 
-                                navController.navigate(Screen.IssueList.route) {
-                                    popUpTo(Screen.Login.route) { inclusive = true }
+                                if (email == "rmw@gmail.com") {
+                                    Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT)
+                                        .show()
+                                    navController.navigate(Screen.Operator.route) {
+                                        popUpTo(Screen.TeacherLogin.route) { inclusive = true }
+                                    }
+                                } else {
+                                    Toast.makeText(context, "Please Enter Valid Information", Toast.LENGTH_SHORT)
+                                        .show()
                                 }
                             }
                         },
@@ -163,7 +172,10 @@ fun LoginScreen(navController: NavHostController) {
                         colors = ButtonDefaults.buttonColors(primarycolor)
                     ) {
                         if (authViewModel.isLoading) {
-                            Box(modifier = Modifier.fillMaxHeight(), contentAlignment = Alignment.Center){
+                            Box(
+                                modifier = Modifier.fillMaxHeight(),
+                                contentAlignment = Alignment.Center
+                            ) {
                                 CircularProgressIndicator(
                                     modifier = Modifier.size(35.dp)
                                 )
@@ -175,47 +187,6 @@ fun LoginScreen(navController: NavHostController) {
                     }
                     authViewModel.errorMessage?.let {
                         Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    OutlinedButton(
-                        onClick = {
-                            authViewModel.signInWithGoogle(context){
-                                Toast.makeText(context, "Google Login Success", Toast.LENGTH_SHORT).show()
-
-                                navController.navigate(Screen.IssueList.route) {
-                                    popUpTo(Screen.Login.route) { inclusive = true }
-                                }
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = continuegooglecolor)
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Image(
-                                painterResource(R.drawable.google_logo_new),
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(modifier = Modifier.width(15.dp))
-                            Text("Continue with Google", fontSize = 18.sp)
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    TextButton(onClick = {
-                        navController.navigate(Screen.SignUp.route) {
-                            popUpTo(Screen.Login.route) {
-                                inclusive = true
-                            }
-                        }
-                    }
-                    ) {
-                        Text("Don't have an account? Sign Up")
                     }
                 }
             }

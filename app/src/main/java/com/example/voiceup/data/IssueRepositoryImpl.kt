@@ -45,6 +45,12 @@ class IssueRepositoryImpl @Inject constructor(
         }
     }
 
+    //  Teacher screen (direct from Firebase)
+    override fun getAllIssues(): Flow<List<Issue>> {
+        return remote.getAllIssues()
+    }
+
+
     override suspend fun addIssue(issue: Issue) {
         local.insertSingle(issue.toInfo())
         remote.addIssue(issue)

@@ -44,18 +44,24 @@ import com.example.voiceup.presentation.viewmodels.AuthViewModel
 import com.example.voiceup.presentation.viewmodels.IssueViewModel
 import com.example.voiceup.ui.theme.primarycolor
 sealed class Screen(val route: String, @StringRes val titleRes: Int) {
-    object Login : Screen("login", R.string.title_login)
+    object RoleSelection : Screen("role_selection", R.string.role_selection)
+    object StudentLogin : Screen("student_login", R.string.student_login)
+    object TeacherLogin : Screen("teacher_login",R.string.teacher_login)
     object SignUp : Screen("signup", R.string.title_signup)
     object Form : Screen("form", R.string.title_form)
     object IssueList : Screen("issue_list", R.string.title_issue_list)
+    object Operator : Screen("operator", R.string.operator_screen)
 
     companion object {
         // Helper to find a Screen object by its route string
         fun fromRoute(route: String?): Screen = when (route) {
             SignUp.route -> SignUp
+            StudentLogin.route -> StudentLogin
+            TeacherLogin.route -> TeacherLogin
+            Operator.route -> Operator
             Form.route -> Form
             IssueList.route -> IssueList
-            else -> Login
+            else -> RoleSelection
         }
     }
 }
@@ -100,7 +106,7 @@ fun IssueApp() {
                         OutlinedButton(
                             onClick = {
                                 authViewModel.logout()
-                                navController.navigate(Screen.Login.route) {
+                                navController.navigate(Screen.StudentLogin.route) {
                                     popUpTo(Screen.IssueList.route) { inclusive = true }
                                 }
                             },
@@ -152,9 +158,15 @@ fun IssueApp() {
                 .padding(innerpadding)
                 .padding(start = 32.dp, end = 32.dp, top = 16.dp, bottom = 16.dp)
         ) {
-            NavHost(navController, startDestination = Screen.Login.route) {
-                composable(Screen.Login.route) {
-                    LoginScreen(navController)
+            NavHost(navController, startDestination = Screen.RoleSelection.route) {
+                composable(Screen.RoleSelection.route) {
+                    RoleSelectionScreen(navController)
+                }
+                composable(Screen.TeacherLogin.route) {
+                    TeacherLoginScreen(navController)
+                }
+                composable(Screen.StudentLogin.route) {
+                    StudentLoginLoginScreen(navController)
                 }
                 composable(Screen.SignUp.route) {
                     SignUpScreen(navController)
@@ -164,7 +176,9 @@ fun IssueApp() {
                 }
                 composable(Screen.IssueList.route) {
                     IssueListScreen(navController, issueViewModel)
-
+                }
+                composable(Screen.Operator.route) {
+                    OperatorScreen(navController)
                 }
             }
         }

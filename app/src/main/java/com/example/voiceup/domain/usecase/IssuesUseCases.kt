@@ -6,6 +6,7 @@ data class IssuesUseCases @Inject constructor(
     val addUseCase: AddUseCase,
     val deleteUseCase: DeleteUseCase,
     val updateUseCase: UpdateUseCase,
-    val getAllUseCase: GetAllUseCase,
+    val getAllUseCase: GetAllUseCase,   // student issues
     val syncIssuesUseCase:SyncIssuesUseCase,
+    val getAllIssuesUseCase: GetAllIssueUseCase // teacher issues
 )
