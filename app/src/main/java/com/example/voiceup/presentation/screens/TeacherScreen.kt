@@ -43,7 +43,7 @@ import com.example.voiceup.ui.theme.primarycolor
 import com.example.voiceup.ui.theme.tertiarycolor
 
 @Composable
-fun OperatorScreen(
+fun TeacherScreen(
     navController: NavHostController,
     viewModel: IssueViewModel = hiltViewModel()
 ) {
