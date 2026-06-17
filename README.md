@@ -7,7 +7,7 @@
 
 ## Project Description
 
-VoiceUp is a modern Android application developed using **Kotlin, Jetpack Compose, MVVM Architecture, Hilt Dependency Injection, Room Database, Firebase Authentication, Firebase Firestore, and Kotlin Coroutines**.
+VoiceUp is a modern Android application developed using **Kotlin, Jetpack Compose, MVVM Architecture,Clean Architecture, Hilt Dependency Injection, Room Database, Firebase Authentication, Firebase Firestore, and Kotlin Coroutines**.
 
 The application provides a centralized digital platform for students to report, manage, and track college-related issues efficiently. Students can securely register or log in, submit complaints regarding academics, infrastructure, facilities, administration, parking, faculty concerns, and other campus-related problems.
 
