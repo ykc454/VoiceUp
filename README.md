@@ -1,7 +1,7 @@
 # VoiceUp – College Issue Reporting App
 
 ## Developer
-**Yash Chaudhari**
+**Yash Chaudhari** **AND** **Prem Doba**
 
 ---
 
@@ -242,21 +242,6 @@ Main entry point that hosts the Compose UI and navigation graph.
 ### Navigation
 
 * Navigation Compose
-
-
-
-
-
-## Contact
-
-<p align="left">
-  <a href="https://www.linkedin.com/in/yashchaudhari1605/">
-    <img src="https://img.shields.io/badge/LinkedIn-Yash%20Chaudhari-blue?style=for-the-badge&logo=linkedin" />
-  </a>
-  <a href="mailto:yashchaudhari1605@gmail.com">
-    <img src="https://img.shields.io/badge/Email-Contact%20Me-red?style=for-the-badge&logo=gmail" />
-  </a>
-</p>
 
 ---
 
