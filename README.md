@@ -1,7 +1,7 @@
 # VoiceUp – College Issue Reporting App
 
 ## Developer
-**Yash Chaudhari** **AND** **Prem Doba**
+**Yash Chaudhari** **and** **Prem Doba**
 
 ---
 
